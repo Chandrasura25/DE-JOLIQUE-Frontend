@@ -45,8 +45,8 @@ function Hero() {
             <span className="text-brand-300">thoughtfully chosen.</span>
           </h1>
           <p className="mt-5 max-w-lg text-base leading-relaxed text-ink-200 sm:text-lg">
-            Fashion, electronics, home and beauty from De-Jolique Enterprise. Honest prices, real stock levels and secure
-            checkout with Paystack or Flutterwave.
+            Premium quality kitchen utensils and general household items from De-Jolique Enterprise. Honest prices, real
+            stock levels and secure checkout with Paystack or Flutterwave.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/products" className={buttonClass({ size: 'lg' })}>

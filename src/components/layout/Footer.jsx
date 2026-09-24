@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="sm:col-span-2 lg:col-span-1">
           <Logo inverted />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-300">
-            Credible and Distinct. Fashion, electronics, home and beauty essentials, delivered with care.
+            A credible brand for the sales and supply of premium quality kitchen utensils and general household items.
           </p>
           {(contact?.email || contact?.phone || contact?.address) && (
             <ul className="mt-5 space-y-2 text-sm text-ink-300">
