@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { ExternalLink, FolderTree, LayoutDashboard, LogOut, Menu, Package, ShoppingCart, Users, X } from 'lucide-react';
+import { ExternalLink, FolderTree, LayoutDashboard, LogOut, Menu, Package, Settings, ShoppingCart, Users, X } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import Logo from '../../components/layout/Logo';
 
@@ -10,6 +10,7 @@ const NAV = [
   { to: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { to: '/admin/categories', label: 'Categories', icon: FolderTree },
   { to: '/admin/users', label: 'Users', icon: Users },
+  { to: '/admin/settings', label: 'Store settings', icon: Settings },
 ];
 
 function Sidebar({ onNavigate }) {

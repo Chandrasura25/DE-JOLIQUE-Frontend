@@ -230,6 +230,13 @@ export default function Checkout() {
             <Lock className="h-4 w-4" aria-hidden />
             {submitting ? 'Redirecting to payment…' : `Pay ${formatPrice(subtotal + shippingFee, currency)}`}
           </Button>
+          <p className="mt-3 text-center text-xs leading-relaxed text-ink-400">
+            By placing your order you agree to our{' '}
+            <Link to="/terms" className="font-medium text-ink-600 underline underline-offset-2">
+              Terms of Service
+            </Link>
+            .
+          </p>
         </aside>
       </form>
     </div>

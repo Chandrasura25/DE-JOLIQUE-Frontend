@@ -16,9 +16,11 @@ The customer storefront and admin dashboard for the De-Jolique Enterprise online
 
 **Storefront:** homepage (hero, categories, featured and latest products) · product listing with search, category and price filters, in-stock filter, sorting and pagination · product page with gallery, stock-aware quantity, Add to cart and Buy now · cart re-validated against live prices and stock · checkout with Paystack or Flutterwave · payment result page · responsive layout with skeletons, empty and error states, toasts and confirmation dialogs.
 
+**Legal pages:** Privacy Policy (`/privacy`) and Terms of Service (`/terms`). Contact details come from the admin's store settings; the rest of the business details (CAC name, delivery areas and times, return and refund days) are in `src/pages/legal/legalConfig.js`.
+
 **Customer accounts:** register, log in with email, **Google** or **Google One Tap**, log out from the top bar, forgot and reset password, profile editing, password change, order history, order detail with a progress tracker, retry payment, and cancel an unpaid order.
 
-**Admin (`/admin`):** separate login with a forced password change on first login · dashboard (revenue, order counts, low stock, orders needing attention) · products with image upload · categories · orders with the fulfilment workflow, cancellation and refunds · **users**: every account with sign-in method and last login, and deletion of customer accounts (orders are kept).
+**Admin (`/admin`):** separate login with a forced password change on first login · dashboard (revenue, order counts, low stock, orders needing attention) · products with image upload · categories · orders with the fulfilment workflow, cancellation and refunds · **users**: every account with sign-in method and last login, and deletion of customer accounts (orders are kept) · **store settings**: the support email, phone and business address shown in the footer, Privacy Policy and Terms.
 
 ---
 

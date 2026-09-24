@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import { Lock, Mail, MapPin, Phone } from 'lucide-react';
 import Logo from './Logo';
-import { useCategories } from '../../lib/queries';
+import { useCategories, useConfig } from '../../lib/queries';
 
 export default function Footer() {
   const { data: categories } = useCategories();
+  const contact = useConfig().data?.contact;
   const year = new Date().getFullYear();
 
   return (
@@ -15,6 +16,32 @@ export default function Footer() {
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-300">
             Credible and Distinct. Fashion, electronics, home and beauty essentials, delivered with care.
           </p>
+          {(contact?.email || contact?.phone || contact?.address) && (
+            <ul className="mt-5 space-y-2 text-sm text-ink-300">
+              {contact.email && (
+                <li className="flex items-start gap-2">
+                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" aria-hidden />
+                  <a href={`mailto:${contact.email}`} className="break-all hover:text-white">
+                    {contact.email}
+                  </a>
+                </li>
+              )}
+              {contact.phone && (
+                <li className="flex items-start gap-2">
+                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" aria-hidden />
+                  <a href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`} className="hover:text-white">
+                    {contact.phone}
+                  </a>
+                </li>
+              )}
+              {contact.address && (
+                <li className="flex items-start gap-2">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" aria-hidden />
+                  <span>{contact.address}</span>
+                </li>
+              )}
+            </ul>
+          )}
         </div>
 
         <div>
@@ -74,7 +101,15 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-2 py-6 text-xs text-ink-400 sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} De-Jolique Enterprise. All rights reserved.</p>
-          <p>Prices in Nigerian Naira (₦).</p>
+          <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <Link to="/privacy" className="hover:text-white">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="hover:text-white">
+              Terms of Service
+            </Link>
+            <span>Prices in Nigerian Naira (₦).</span>
+          </nav>
         </div>
       </div>
     </footer>

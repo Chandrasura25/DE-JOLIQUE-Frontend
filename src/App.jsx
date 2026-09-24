@@ -29,6 +29,9 @@ const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
 const AdminOrderDetail = lazy(() => import('./pages/admin/AdminOrderDetail'));
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
+const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/legal/TermsOfService'));
 
 function NotFound() {
   return (
@@ -60,6 +63,8 @@ export default function App() {
               <Route path="register" element={<Register />} />
               <Route path="forgot-password" element={<ForgotPassword />} />
               <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="terms" element={<TermsOfService />} />
               <Route path="checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
               <Route path="payment/callback" element={<RequireAuth><PaymentCallback /></RequireAuth>} />
               <Route path="account" element={<RequireAuth><Account /></RequireAuth>} />
@@ -79,6 +84,7 @@ export default function App() {
               <Route path="orders/:id" element={<AdminOrderDetail />} />
               <Route path="categories" element={<AdminCategories />} />
               <Route path="users" element={<AdminUsers />} />
+              <Route path="settings" element={<AdminSettings />} />
             </Route>
           </Routes>
         </Suspense>
