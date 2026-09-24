@@ -16,7 +16,7 @@ The customer storefront and admin dashboard for the De-Jolique Enterprise online
 
 **Storefront:** homepage (hero, categories, featured and latest products) · product listing with search, category and price filters, in-stock filter, sorting and pagination · product page with gallery, stock-aware quantity, Add to cart and Buy now · cart re-validated against live prices and stock · checkout with Paystack or Flutterwave · payment result page · responsive layout with skeletons, empty and error states, toasts and confirmation dialogs.
 
-**Customer accounts:** register, log in with email or **Google**, log out from the top bar, forgot and reset password, profile editing, password change, order history, order detail with a progress tracker, retry payment, and cancel an unpaid order.
+**Customer accounts:** register, log in with email, **Google** or **Google One Tap**, log out from the top bar, forgot and reset password, profile editing, password change, order history, order detail with a progress tracker, retry payment, and cancel an unpaid order.
 
 **Admin (`/admin`):** separate login with a forced password change on first login · dashboard (revenue, order counts, low stock, orders needing attention) · products with image upload · categories · orders with the fulfilment workflow, cancellation and refunds · **users**: every account with sign-in method and last login, and deletion of customer accounts (orders are kept).
 
@@ -31,7 +31,7 @@ client/
 │   ├── components/
 │   │   ├── ui/                 # Button, Field, Dialog, Badge, Feedback, Pagination, …
 │   │   ├── layout/             # Header (top bar + mobile drawer), Footer, StoreLayout, AuthShell, Logo
-│   │   ├── auth/               # GoogleButton
+│   │   ├── auth/               # GoogleButton, GoogleOneTap
 │   │   ├── account/, order/, product/, routing/
 │   ├── lib/
 │   │   ├── api.js              # axios instance (cookies, 401 handling, error messages)
@@ -80,6 +80,7 @@ Everything prefixed `VITE_` is compiled into the public JavaScript bundle. **Nev
 - Every request goes to `/api/*` with `withCredentials`, so the browser sends the session cookies.
 - **The app never sees an access or refresh token.** The API keeps the Supabase session in httpOnly cookies and refreshes it on its own. The auth store only holds the user's profile (`GET /api/auth/me`).
 - **Google sign-in** is a full-page redirect to `/api/auth/google?next=<page>`. The API sends the user to Google through Supabase, then back to the page they started from. The button only appears when Google is enabled in Supabase (`GET /api/auth/providers`).
+- **Google One Tap** appears for signed-out visitors on store pages (not in the admin area). Each prompt uses a fresh nonce from the API, and Google's ID token goes straight to `POST /api/auth/google/one-tap`, which turns it into the same cookie session. It shows up once `GOOGLE_CLIENT_ID` is set on the API and the storefront origin is listed under the Google client's *Authorised JavaScript origins*.
 - **Email links** (confirmation, password reset) return through `/api/auth/callback`, which then redirects to `/login?auth=…` or `/reset-password`. The login page turns the `auth` value into a friendly message.
 - **Admin pages are only a view.** Every admin request is checked by the API, which reads the role from the database each time.
 
@@ -97,5 +98,7 @@ Everything prefixed `VITE_` is compiled into the public JavaScript bundle. **Nev
 4. On the API host, set `CLIENT_URL` and `SERVER_URL` to the storefront's URL (`https://<your-vercel-domain>`). In Supabase Auth, add `https://<your-vercel-domain>/api/auth/callback**` to the Redirect URLs. The server README's *Deployment* section has the full list.
 
 `vercel.json` also sends every non-file path to `index.html`, so deep links and refreshes (`/account`, `/admin/users`) work, and it caches the hashed files in `/assets` for a year.
+
+**Security headers** (also in `vercel.json`): a strict Content-Security-Policy (scripts only from this site and Google's One Tap script, no inline scripts, no framing), HSTS, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, a strict `Referrer-Policy` and a locked-down `Permissions-Policy`. If you add a third-party script (analytics, chat), add its origin to the CSP or the browser will block it.
 
 The local `.vercel/` folder created by `vercel link` or the Vercel CLI is git-ignored. It only links your machine to the project and must not be committed.

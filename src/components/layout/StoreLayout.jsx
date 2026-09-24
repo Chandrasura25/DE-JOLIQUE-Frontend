@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import GoogleOneTap from '../auth/GoogleOneTap';
 
 export default function StoreLayout() {
   return (
@@ -13,6 +14,7 @@ export default function StoreLayout() {
         <Outlet />
       </main>
       <Footer />
+      <GoogleOneTap />
     </div>
   );
 }

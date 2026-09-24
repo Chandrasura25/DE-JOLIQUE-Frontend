@@ -44,6 +44,17 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  /** Google One Tap: the API redeems Google's ID token (with its nonce cookie) for a session. */
+  async signInWithOneTap(credential) {
+    try {
+      const { data } = await api.post('/auth/google/one-tap', { credential });
+      set({ user: data.user, profileError: null });
+      return data.user;
+    } catch (err) {
+      throw new Error(errorMessage(err));
+    }
+  },
+
   /** Full-page redirect to Google (via the API and Supabase Auth); comes back signed in. */
   signInWithGoogle(next = '/account') {
     window.location.assign(`${API_BASE}/auth/google?next=${encodeURIComponent(next)}`);
