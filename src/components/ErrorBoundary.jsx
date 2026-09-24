@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { ErrorState } from './ui/Feedback';
+import { isChunkLoadError } from '../lib/chunkReload';
 
 /** Keeps one broken component from blanking the whole store. */
 export default class ErrorBoundary extends Component {
@@ -22,6 +23,18 @@ export default class ErrorBoundary extends Component {
   }
 
   render() {
+    if (this.state.error && isChunkLoadError(this.state.error)) {
+      // Reached only if the automatic reload didn't happen (e.g. it just ran).
+      return (
+        <div className="container-page py-16">
+          <ErrorState
+            title="A new version of the store is available"
+            message="Reload the page to continue."
+            onRetry={() => window.location.reload()}
+          />
+        </div>
+      );
+    }
     if (this.state.error) {
       return (
         <div className="container-page py-16">

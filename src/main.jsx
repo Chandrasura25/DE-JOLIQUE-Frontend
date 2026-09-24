@@ -7,6 +7,12 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/sora';
 import './index.css';
 import App from './App';
+import { reloadForNewVersion } from './lib/chunkReload';
+
+// A file from the previous deploy is gone (see lib/chunkReload.js): load the new version.
+window.addEventListener('vite:preloadError', (event) => {
+  if (reloadForNewVersion()) event.preventDefault();
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {

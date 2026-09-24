@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
+import { lazyPage } from './lib/chunkReload';
 import StoreLayout from './components/layout/StoreLayout';
 import ErrorBoundary from './components/ErrorBoundary';
 import { RequireAdmin, RequireAuth, ScrollToTop } from './components/routing/Guards';
@@ -15,23 +16,23 @@ import Register from './pages/auth/Register';
 import { ForgotPassword, ResetPassword } from './pages/auth/PasswordReset';
 
 // Less-visited areas are split into their own chunks.
-const Checkout = lazy(() => import('./pages/Checkout'));
-const PaymentCallback = lazy(() => import('./pages/PaymentCallback'));
-const Account = lazy(() => import('./pages/account/Account'));
-const OrderDetails = lazy(() => import('./pages/account/OrderDetails'));
-const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
-const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
-const AdminChangePassword = lazy(() => import('./pages/admin/AdminLogin').then((m) => ({ default: m.AdminChangePassword })));
-const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
-const AdminProducts = lazy(() => import('./pages/admin/AdminProducts'));
-const ProductForm = lazy(() => import('./pages/admin/ProductForm'));
-const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
-const AdminOrderDetail = lazy(() => import('./pages/admin/AdminOrderDetail'));
-const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
-const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
-const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
-const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'));
-const TermsOfService = lazy(() => import('./pages/legal/TermsOfService'));
+const Checkout = lazyPage(() => import('./pages/Checkout'));
+const PaymentCallback = lazyPage(() => import('./pages/PaymentCallback'));
+const Account = lazyPage(() => import('./pages/account/Account'));
+const OrderDetails = lazyPage(() => import('./pages/account/OrderDetails'));
+const AdminLayout = lazyPage(() => import('./pages/admin/AdminLayout'));
+const AdminLogin = lazyPage(() => import('./pages/admin/AdminLogin'));
+const AdminChangePassword = lazyPage(() => import('./pages/admin/AdminLogin').then((m) => ({ default: m.AdminChangePassword })));
+const Dashboard = lazyPage(() => import('./pages/admin/Dashboard'));
+const AdminProducts = lazyPage(() => import('./pages/admin/AdminProducts'));
+const ProductForm = lazyPage(() => import('./pages/admin/ProductForm'));
+const AdminOrders = lazyPage(() => import('./pages/admin/AdminOrders'));
+const AdminOrderDetail = lazyPage(() => import('./pages/admin/AdminOrderDetail'));
+const AdminCategories = lazyPage(() => import('./pages/admin/AdminCategories'));
+const AdminUsers = lazyPage(() => import('./pages/admin/AdminUsers'));
+const AdminSettings = lazyPage(() => import('./pages/admin/AdminSettings'));
+const PrivacyPolicy = lazyPage(() => import('./pages/legal/PrivacyPolicy'));
+const TermsOfService = lazyPage(() => import('./pages/legal/TermsOfService'));
 
 function NotFound() {
   return (
