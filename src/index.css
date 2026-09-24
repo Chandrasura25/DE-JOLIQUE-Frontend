@@ -1,0 +1,88 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Sora Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+
+  /* Brand teal, sampled from the De-Jolique logo */
+  --color-brand-50: #ebf8f8;
+  --color-brand-100: #cdeeee;
+  --color-brand-200: #9fdede;
+  --color-brand-300: #66c8c8;
+  --color-brand-400: #2fb0b0;
+  --color-brand-500: #099f9f;
+  --color-brand-600: #078585;
+  --color-brand-700: #0a6a6b;
+  --color-brand-800: #0d5556;
+  --color-brand-900: #0f4546;
+
+  /* Brand navy */
+  --color-ink-50: #f1f3f8;
+  --color-ink-100: #dfe3ee;
+  --color-ink-200: #bcc4da;
+  --color-ink-300: #8d99ba;
+  --color-ink-400: #5d6b94;
+  --color-ink-500: #3d4a73;
+  --color-ink-600: #2a375d;
+  --color-ink-700: #1c2a4d;
+  --color-ink-800: #122045;
+  --color-ink-900: #0b1b41;
+  --color-ink-950: #06102a;
+
+  --color-canvas: #f6f6f2;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-canvas font-sans text-ink-900 antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .card {
+    @apply rounded-2xl border border-ink-100 bg-white;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink-700;
+  }
+  .input {
+    @apply block w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-300 transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none disabled:bg-ink-50 disabled:text-ink-400;
+  }
+  .select {
+    @apply appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 7.5 10 12l4.5-4.5' stroke='%235d6b94' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-size: 1.1rem;
+    background-position: right 0.75rem center;
+  }
+  .input-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/15;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

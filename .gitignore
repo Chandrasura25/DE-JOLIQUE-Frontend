@@ -1,0 +1,36 @@
+# This folder is the root of the storefront repository; paths below are relative to it.
+
+# ---- Dependencies -----------------------------------------------------------
+node_modules/
+
+# ---- Env files: only the template is committed -------------------------------
+# VITE_* values end up in the browser bundle, but local overrides still stay local.
+.env
+.env.*
+!.env.example
+
+# ---- Build output (Vercel builds from source) --------------------------------
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# ---- Vercel CLI project link (created by `vercel` / `vercel link`) ----------
+.vercel/
+
+# ---- Logs -------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- OS / editor ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+.claude/
