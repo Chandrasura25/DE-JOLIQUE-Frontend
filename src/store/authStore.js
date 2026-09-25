@@ -61,13 +61,14 @@ export const useAuthStore = create((set, get) => ({
   },
 
   /** Returns { needsConfirmation } — true when the project requires email confirmation. */
-  async signUp({ name, email, phone, password }, next) {
+  async signUp({ name, email, phone, password, confirm }, next) {
     try {
       const { data } = await api.post('/auth/register', {
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim(),
         password,
+        confirmPassword: confirm,
         next,
       });
       if (data.user) set({ user: data.user, profileError: null });
@@ -90,9 +91,9 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  async setNewPassword(password) {
+  async setNewPassword(password, confirmPassword) {
     try {
-      const { data } = await api.post('/auth/reset-password', { password });
+      const { data } = await api.post('/auth/reset-password', { password, confirmPassword });
       set({ user: data.user });
     } catch (err) {
       throw new Error(errorMessage(err));

@@ -8,12 +8,7 @@ import Button from '../../components/ui/Button';
 import { Input } from '../../components/ui/Field';
 import { Alert } from '../../components/ui/Feedback';
 import GoogleButton from '../../components/auth/GoogleButton';
-
-export function passwordProblem(password) {
-  if (!password || password.length < 8) return 'Use at least 8 characters.';
-  if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) return 'Use both letters and numbers.';
-  return null;
-}
+import { ConfirmPasswordInput, NewPasswordInput, passwordProblem } from '../../components/auth/PasswordFields';
 
 export default function Register() {
   const [params] = useSearchParams();
@@ -99,8 +94,8 @@ export default function Register() {
         <Input label="Full name" autoComplete="name" value={form.name} onChange={set('name')} error={errors.name} />
         <Input label="Email" type="email" autoComplete="email" value={form.email} onChange={set('email')} error={errors.email} />
         <Input label="Phone (optional)" type="tel" autoComplete="tel" value={form.phone} onChange={set('phone')} error={errors.phone} />
-        <Input label="Password" type="password" autoComplete="new-password" value={form.password} onChange={set('password')} error={errors.password} hint="At least 8 characters, with letters and numbers." />
-        <Input label="Confirm password" type="password" autoComplete="new-password" value={form.confirm} onChange={set('confirm')} error={errors.confirm} />
+        <NewPasswordInput value={form.password} onChange={set('password')} error={errors.password} />
+        <ConfirmPasswordInput value={form.confirm} password={form.password} onChange={set('confirm')} error={errors.confirm} />
         <Button type="submit" size="lg" className="w-full" loading={loading}>
           Create account
         </Button>

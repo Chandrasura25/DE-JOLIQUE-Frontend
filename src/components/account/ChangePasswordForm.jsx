@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { api, errorMessage } from '../../lib/api';
 import { useAuthStore } from '../../store/authStore';
-import { passwordProblem } from '../../pages/auth/Register';
+import { ConfirmPasswordInput, NewPasswordInput, passwordProblem } from '../auth/PasswordFields';
 import Button from '../ui/Button';
 import { Input } from '../ui/Field';
 import { Alert } from '../ui/Feedback';
@@ -32,6 +32,7 @@ export default function ChangePasswordForm({ onDone }) {
       const { data } = await api.put('/auth/change-password', {
         currentPassword: form.currentPassword,
         newPassword: form.newPassword,
+        confirmPassword: form.confirm,
       });
       setUser(data.user);
       setForm({ currentPassword: '', newPassword: '', confirm: '' });
@@ -50,8 +51,8 @@ export default function ChangePasswordForm({ onDone }) {
     <form onSubmit={submit} noValidate className="space-y-4">
       {error && <Alert tone="error">{error}</Alert>}
       <Input label="Current password" type="password" autoComplete="current-password" value={form.currentPassword} onChange={set('currentPassword')} error={errors.currentPassword} />
-      <Input label="New password" type="password" autoComplete="new-password" value={form.newPassword} onChange={set('newPassword')} error={errors.newPassword} hint="At least 8 characters, with letters and numbers." />
-      <Input label="Confirm new password" type="password" autoComplete="new-password" value={form.confirm} onChange={set('confirm')} error={errors.confirm} />
+      <NewPasswordInput label="New password" value={form.newPassword} onChange={set('newPassword')} error={errors.newPassword} />
+      <ConfirmPasswordInput label="Confirm new password" value={form.confirm} password={form.newPassword} onChange={set('confirm')} error={errors.confirm} />
       <Button type="submit" loading={loading}>
         Change password
       </Button>

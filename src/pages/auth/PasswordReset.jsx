@@ -6,7 +6,7 @@ import AuthShell from '../../components/layout/AuthShell';
 import Button from '../../components/ui/Button';
 import { Input } from '../../components/ui/Field';
 import { Alert, PageLoader } from '../../components/ui/Feedback';
-import { passwordProblem } from './Register';
+import { ConfirmPasswordInput, NewPasswordInput, passwordProblem } from '../../components/auth/PasswordFields';
 
 export function ForgotPassword() {
   const request = useAuthStore((s) => s.requestPasswordReset);
@@ -74,7 +74,7 @@ export function ResetPassword() {
     if (Object.keys(found).length) return;
     setLoading(true);
     try {
-      await setNewPassword(form.password);
+      await setNewPassword(form.password, form.confirm);
       toast.success('Password updated.');
       navigate('/account', { replace: true });
     } catch (err) {
@@ -94,8 +94,8 @@ export function ResetPassword() {
       ) : (
         <form onSubmit={submit} noValidate className="space-y-4">
           {error && <Alert tone="error">{error}</Alert>}
-          <Input label="New password" type="password" autoComplete="new-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} error={errors.password} />
-          <Input label="Confirm new password" type="password" autoComplete="new-password" value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} error={errors.confirm} />
+          <NewPasswordInput label="New password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} error={errors.password} />
+          <ConfirmPasswordInput label="Confirm new password" value={form.confirm} password={form.password} onChange={(e) => setForm({ ...form, confirm: e.target.value })} error={errors.confirm} />
           <Button type="submit" size="lg" className="w-full" loading={loading}>
             Update password
           </Button>
