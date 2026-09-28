@@ -100,7 +100,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-2 py-6 text-xs text-ink-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} De-Jolique Enterprise. All rights reserved.</p>
+          <p>© {year} De-Jolique Enterprise · Built by Chandrasura. All rights reserved.</p>
           <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <Link to="/privacy" className="hover:text-white">
               Privacy Policy
