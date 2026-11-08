@@ -1,5 +1,6 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Headphones, Home as HomeIcon, PackageCheck, ShieldCheck, Shirt, Sparkles, Tag, Truck, Watch } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Headphones, Home as HomeIcon, PackageCheck, ShieldCheck, Shirt, Sparkles, Tag, Truck, Watch } from 'lucide-react';
 import { useCategories, useConfig, useProducts } from '../lib/queries';
 import { ProductGrid } from '../components/product/ProductCard';
 import { ErrorState, Skeleton } from '../components/ui/Feedback';
@@ -13,19 +14,104 @@ const CATEGORY_STYLE = {
   accessories: { icon: Watch, tint: 'from-brand-100 to-brand-50 text-brand-700' },
 };
 
-function SectionHeader({ eyebrow, title, to }) {
+function SectionHeader({ eyebrow, title, to, children }) {
   return (
     <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
       <div>
         <p className="text-xs font-semibold tracking-[0.18em] text-brand-600 uppercase">{eyebrow}</p>
         <h2 className="mt-1.5 text-2xl font-bold sm:text-3xl">{title}</h2>
       </div>
+      {children}
       {to && (
         <Link to={to} className="group flex shrink-0 items-center gap-1 text-sm font-semibold text-ink-700 hover:text-brand-700">
           View all <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </Link>
       )}
     </div>
+  );
+}
+
+const CAROUSEL_ITEM = 'w-[42%] shrink-0 snap-start sm:w-[30%] lg:w-[calc((100%-4rem)/5)]';
+
+function CategoryCarousel({ categories }) {
+  const trackRef = useRef(null);
+  const [edges, setEdges] = useState({ start: true, end: true });
+  const visible = useMemo(() => (categories.data || []).filter((c) => c.productCount > 0), [categories.data]);
+
+  const updateEdges = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    setEdges({ start: el.scrollLeft <= 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+  }, []);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    updateEdges();
+    const observer = new ResizeObserver(updateEdges);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [updateEdges, visible]);
+
+  if (categories.isSuccess && visible.length === 0) return null;
+
+  const scrollBy = (dir) => {
+    const el = trackRef.current;
+    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.9, behavior: 'smooth' });
+  };
+
+  const arrowClass =
+    'inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-700 transition hover:border-ink-300 hover:bg-ink-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white';
+
+  return (
+    <section className="pt-12 sm:pt-16" aria-roledescription="carousel" aria-label="Shop by category">
+      <SectionHeader eyebrow="Browse" title="Shop by category">
+        {!(edges.start && edges.end) && (
+          <div className="hidden shrink-0 gap-2 sm:flex">
+            <button type="button" className={arrowClass} onClick={() => scrollBy(-1)} disabled={edges.start} aria-label="Previous categories">
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button type="button" className={arrowClass} onClick={() => scrollBy(1)} disabled={edges.end} aria-label="Next categories">
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        )}
+      </SectionHeader>
+
+      {categories.isError ? (
+        <ErrorState message="Unable to load categories." onRetry={categories.refetch} />
+      ) : (
+        <div className="relative">
+          <div ref={trackRef} onScroll={updateEdges} className="scrollbar-none -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-1 py-1 sm:gap-4">
+            {categories.isLoading
+              ? Array.from({ length: 5 }, (_, i) => <Skeleton key={i} className={`h-32 rounded-2xl ${CAROUSEL_ITEM}`} />)
+              : visible.map((c) => {
+                  const style = CATEGORY_STYLE[c.slug] || { icon: Tag, tint: 'from-ink-100 to-ink-50 text-ink-700' };
+                  const Icon = style.icon;
+                  return (
+                    <Link
+                      key={c.id}
+                      to={`/products?category=${c.slug}`}
+                      className={`group relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-br p-4 transition hover:-translate-y-0.5 hover:shadow-lg ${style.tint} ${CAROUSEL_ITEM}`}
+                    >
+                      <Icon className="h-7 w-7 shrink-0" aria-hidden />
+                      <div className="min-w-0 pr-5">
+                        <p className="line-clamp-2 font-display leading-tight font-bold text-ink-900">{c.name}</p>
+                        <p className="mt-0.5 text-xs text-ink-500">
+                          {c.productCount} {c.productCount === 1 ? 'product' : 'products'}
+                        </p>
+                      </div>
+                      <ArrowRight className="absolute right-4 bottom-4 h-4 w-4 text-ink-400 transition group-hover:translate-x-0.5 group-hover:text-ink-900" />
+                    </Link>
+                  );
+                })}
+          </div>
+          {!edges.end && (
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-canvas to-transparent sm:hidden" aria-hidden />
+          )}
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -107,35 +193,7 @@ export default function Home() {
       </section>
 
       <div className="container-page">
-        <section className="pt-16">
-          <SectionHeader eyebrow="Browse" title="Shop by category" />
-          {categories.isError ? (
-            <ErrorState message="Unable to load categories." onRetry={categories.refetch} />
-          ) : (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-              {categories.isLoading
-                ? Array.from({ length: 5 }, (_, i) => <Skeleton key={i} className="h-32 rounded-2xl" />)
-                : categories.data.map((c) => {
-                    const style = CATEGORY_STYLE[c.slug] || { icon: Tag, tint: 'from-ink-100 to-ink-50 text-ink-700' };
-                    const Icon = style.icon;
-                    return (
-                      <Link
-                        key={c.id}
-                        to={`/products?category=${c.slug}`}
-                        className={`group relative flex h-32 flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-br p-4 transition hover:-translate-y-0.5 hover:shadow-lg ${style.tint}`}
-                      >
-                        <Icon className="h-7 w-7" aria-hidden />
-                        <div>
-                          <p className="font-display font-bold text-ink-900">{c.name}</p>
-                          <p className="text-xs text-ink-500">{c.productCount} products</p>
-                        </div>
-                        <ArrowRight className="absolute right-4 bottom-4 h-4 w-4 text-ink-400 transition group-hover:translate-x-0.5 group-hover:text-ink-900" />
-                      </Link>
-                    );
-                  })}
-            </div>
-          )}
-        </section>
+        <CategoryCarousel categories={categories} />
 
         <section className="pt-16">
           <SectionHeader eyebrow="Hand-picked" title="Featured products" to="/products?featured=true" />

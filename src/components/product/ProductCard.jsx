@@ -38,7 +38,7 @@ export function ProductCard({ product, currency = 'NGN' }) {
         </div>
       </Link>
 
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
         {product.category && <p className="text-[11px] font-semibold tracking-wider text-brand-600 uppercase">{product.category.name}</p>}
         <h3 className="mt-1 line-clamp-2 text-[15px] leading-snug font-semibold text-ink-900">
           <Link to={`/products/${product.slug}`} className="hover:text-brand-700">
@@ -50,15 +50,28 @@ export function ProductCard({ product, currency = 'NGN' }) {
           <p className={`text-xs font-medium ${soldOut ? 'text-red-600' : 'text-emerald-600'}`}>{soldOut ? 'Out of stock' : 'In stock'}</p>
         </div>
 
-        <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] gap-2 pt-0">
+        <div className="mt-auto grid grid-cols-[minmax(0,1fr)_auto] gap-2 pt-4">
           <button
             type="button"
             onClick={handleAdd}
             disabled={soldOut || maxedOut}
-            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-ink-900 px-3 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-ink-100 disabled:text-ink-400"
+            aria-label={soldOut ? 'Sold out' : maxedOut ? 'All in cart' : `Add ${product.name} to cart`}
+            className="inline-flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-ink-900 px-2 text-[13px] font-semibold whitespace-nowrap text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-ink-100 disabled:text-ink-400 sm:px-3 sm:text-sm"
           >
-            <ShoppingBag className="h-4 w-4" aria-hidden />
-            {soldOut ? 'Sold out' : maxedOut ? 'All in cart' : 'Add to cart'}
+            <ShoppingBag className="h-4 w-4 shrink-0" aria-hidden />
+            {soldOut ? (
+              'Sold out'
+            ) : maxedOut ? (
+              <>
+                <span className="sm:hidden">In cart</span>
+                <span className="hidden sm:inline">All in cart</span>
+              </>
+            ) : (
+              <>
+                <span className="sm:hidden">Add</span>
+                <span className="hidden sm:inline">Add to cart</span>
+              </>
+            )}
           </button>
           <Link
             to={`/products/${product.slug}`}
@@ -78,7 +91,7 @@ export function ProductCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-2xl border border-ink-100 bg-white">
       <Skeleton className="aspect-[4/5] rounded-none" />
-      <div className="space-y-2.5 p-4">
+      <div className="space-y-2.5 p-3 sm:p-4">
         <Skeleton className="h-3 w-16" />
         <Skeleton className="h-4 w-4/5" />
         <Skeleton className="h-5 w-24" />
